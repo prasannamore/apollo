@@ -30,39 +30,30 @@ const sendMail = require('../../services/nodemailer').sendEmailFunction
   * @param {*} context : context 
    */
 exports.addCollaborator = async (parent, args, context) => {
-
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         if (context.token) {
             var payload = await jwt.verify(context.token, process.env.APP_SECRET)
             console.log(payload.user_ID)
             var user = await userModel.find({ "_id": payload.user_ID });
             if (!user.length > 0) {
-                return {
-                    "message": "user not found",
-                    "success": false
-                }
+                throw new Error("user not found")
             }
             var collaboratorUser = await userModel.find({ "_id": args.collaborateID })
             if (!collaboratorUser.length > 0) {
-                return {
-                    "message": "no such collaborator user",
-                    "success": false
-                }
+                throw new Error("no such collaborator user")
             }
             var note = await noteModel.find({ "_id": args.noteID })
             if (!note.length > 0) {
-                return {
-                    "message": "note not found",
-                    "success": false
-                }
+                throw new Error("note not found")
             }
             var colab = await colModel.find({ collaboratorID: args.collaborateID, NoteID: args.noteID, UserID: payload.user_ID, })
             console.log(colab);
             if (colab.length > 0) {
-                return {
-                    "message": "note already colabrated",
-                    "success": false
-                }
+                throw new Error("note already colabrated")
             }
             var newColab = new colModel({
                 "UserID": payload.user_ID,
@@ -79,20 +70,22 @@ exports.addCollaborator = async (parent, args, context) => {
                 }
             }
             else {
-                return {
-                    "message": "colaboration unsuccessful",
-                    "success": false
-                }
+                throw new Error("colaboration unsuccessful")
             }
 
         }
-        return {
-            "message": "token not provided",
-            "success": false
-        }
+        throw new Error("token not provided")
     } catch (err) {
-        console.log("!Error")
-        return { "message": err }
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
+        }
     }
 }
 
@@ -105,31 +98,25 @@ exports.addCollaborator = async (parent, args, context) => {
   * @param {*} context : context 
    */
 exports.removeCollaborator = async (parent, args, context) => {
-
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         if (context.token) {
             var payload = await jwt.verify(context.token, process.env.APP_SECRET)
             console.log(payload.user_ID)
             var user = await userModel.find({ "_id": payload.user_ID });
             if (!user.length > 0) {
-                return {
-                    "message": "user not found",
-                    "success": false
-                }
+                throw new Error("user not found")
             }
             var collaboratorUser = await userModel.find({ "_id": args.collaborateID })
             if (!collaboratorUser.length > 0) {
-                return {
-                    "message": "no such collaborator user",
-                    "success": false
-                }
+                throw new Error("no such collaborator user")
             }
             var note = await noteModel.find({ "_id": args.noteID })
             if (!note.length > 0) {
-                return {
-                    "message": "note not found",
-                    "success": false
-                }
+                throw new Error("note not found")
             }
             var colab = await colModel.findOneAndDelete({ collaboratorID: args.collaborateID, NoteID: args.noteID, UserID: payload.user_ID, })
             console.log(colab);
@@ -143,20 +130,22 @@ exports.removeCollaborator = async (parent, args, context) => {
 
             }
             else {
-                return {
-                    "message": "colaboration remove unsuccessful",
-                    "success": false
-                }
+                throw new Error("colaboration remove unsuccessful")
             }
 
         }
-        return {
-            "message": "token not provided",
-            "success": false
-        }
+        throw new Error("token not provided")
     } catch (err) {
-        console.log(err)
-        return { "message": "!Error" }
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
+        }
     }
 }
 

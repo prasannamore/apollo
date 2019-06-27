@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
-    "start": "nodemon server.js"
+    "test": "mocha --timeout 30000 ./test/**/*.js --exit || true",
+    "start": "nodemon server.js",
+    "coverage": "./node_modules/.bin/nyc -r cobertura -r text-summary -r lcov npm test"
   },
   "author": "",
   "license": "ISC",
@@ -37,5 +38,8 @@
     "redis-async": "^1.0.1",
     "supertest": "^4.0.2",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "nyc": "^14.1.1"
   }
 }

@@ -30,6 +30,10 @@ const axiosService = require("../../services/axiosService").axiosService
   */
 
 exports.createBranch = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         // check if token is provided
         if (context.token) {
@@ -42,9 +46,7 @@ exports.createBranch = async (root, args, context) => {
                     var access_token = gitUser[0].gittoken;
                 }
                 else {
-                    return {
-                        "message": "not git user"
-                    }
+                    throw new Error("not git user")
                 }
                 // get sha of repository
                 const shaurl = `https://api.github.com/repos/${args.gitUserName}/${args.repoName}/git/refs`
@@ -62,30 +64,32 @@ exports.createBranch = async (root, args, context) => {
                 // return branch created
                 console.log("branch res==============================>", branches)
                 return {
-                    "message": "branch add successfully"
+                    "message": "branch add successfully",
+                    "success":true
                 }
             }
             else {
-                return {
-                    "message": "token not valid",
-                    "success": false
-                }
+                throw new Error("token not valid")
             }
         }
 
         else {
-            return {
-                "message": "token not provided",
-                "success": false
-            }
+            throw new Error("token not provided")
         }
 
 
     }
     catch (err) {
         console.log("Error====================>\n", err)
-        return {
-            "message": err.response.data.message
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
         }
     }
 }
@@ -99,6 +103,10 @@ exports.createBranch = async (root, args, context) => {
   */
 
 exports.deleteBranch = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         // check if token is provided
         if (context.token) {
@@ -111,9 +119,7 @@ exports.deleteBranch = async (root, args, context) => {
                     var access_token = gitUser[0].gittoken;
                 }
                 else {
-                    return {
-                        "message": "not git user"
-                    }
+                    throw new Error("not git user")
                 }
 
                 // delete  branch 
@@ -121,26 +127,30 @@ exports.deleteBranch = async (root, args, context) => {
                 const deletebrach = await axiosService('DELETE', deleteurl, access_token)
                 console.log("branch res==============================>", deletebrach)
                 return {
-                    "message": "branch delete successfully"
+                    "message": "branch delete successfully",
+                    "success":true
                 }
 
             }
             else {
-                return {
-                    "message": "Un Authorized"
-                }
+                throw new Error("Un Authorized")
             }
         }
         else {
-            return {
-                "message": "token not provided"
-            }
+            throw new Error("token not provided")
         }
     }
     catch (err) {
         console.log(err)
-        return {
-            "message": "connot delete"
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
         }
     }
 }
@@ -155,7 +165,12 @@ exports.deleteBranch = async (root, args, context) => {
 
 
 exports.star = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     // check if token provided
+    try{
     if (context.token) {
         // verify token
         var payload = jwt.verify(context.token, process.env.APP_SECRET)
@@ -178,26 +193,30 @@ exports.star = async (root, args, context) => {
                 }
             }
             else {
-                return {
-                    "message": "not git user",
-                    "success": false
-                }
+                throw new Error("not git user")
             }
 
         }
         else {
-            return {
-                "message": "Un auth",
-                "success": false
-            }
+            throw new Error("Un Authorized")
         }
     }
     else {
-        return {
-            "message": "token not provided",
-            "success": false
-        }
+        throw new Error("token not provided")
     }
+}
+catch(err){
+    if (err instanceof ReferenceError
+        || err instanceof SyntaxError
+        || err instanceof TypeError
+        || err instanceof RangeError) {
+        return result;
+    }
+    else {
+        result.message = err.message;
+        return result
+    }
+}
 }
 
 /**
@@ -209,7 +228,12 @@ exports.star = async (root, args, context) => {
   */
 
 exports.unstar = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     // check if token provided
+    try{
     if (context.token) {
         // verify token
         var payload = await jwt.verify(context.token, process.env.APP_SECRET)
@@ -232,26 +256,30 @@ exports.unstar = async (root, args, context) => {
                 }
             }
             else {
-                return {
-                    "message": "not git user",
-                    "success": false
-                }
+                throw new Error("not git user")
             }
 
         }
         else {
-            return {
-                "message": "Un auth",
-                "success": false
-            }
+            throw new Error("Un auth")
         }
     }
     else {
-        return {
-            "message": "token not provided",
-            "success": false
-        }
+        throw new Error("token not provided")
     }
+}
+catch(err){
+    if (err instanceof ReferenceError
+        || err instanceof SyntaxError
+        || err instanceof TypeError
+        || err instanceof RangeError) {
+        return result;
+    }
+    else {
+        result.message = err.message;
+        return result
+    }
+}
 }
 /**
   * @description       : watch  repositore
@@ -261,6 +289,10 @@ exports.unstar = async (root, args, context) => {
   * @param {*} context    : context 
   */
 exports.watchrepository = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         if (context.token) {
             var payload = await jwt.verify(context.token, process.env.APP_SECRET);
@@ -278,31 +310,28 @@ exports.watchrepository = async (root, args, context) => {
                     }
                 }
                 else {
-                    return {
-                        "message": "not git user",
-                        "success": false
-                    }
+                    throw new Error("not git user")
                 }
             }
             else {
-                return {
-                    "message": "Un Auth",
-                    "success": false
-                }
+                throw new Error("Un Auth")
             }
         }
         else {
-            return {
-                "message": "token not provided",
-                "success": false
-            }
+            throw new Error("token not provided")
         }
     }
     catch (err) {
         console.log(err)
-        return {
-            "message": "error ocurred , something went wrong",
-            "success": false
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
         }
     }
 }
@@ -316,6 +345,10 @@ exports.watchrepository = async (root, args, context) => {
   * @param {*} context    : context 
   */
 exports.unWatchRepository = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         if (context.token) {
             var payload = await jwt.verify(context.token, process.env.APP_SECRET);
@@ -332,31 +365,28 @@ exports.unWatchRepository = async (root, args, context) => {
                     }
                 }
                 else {
-                    return {
-                        "message": "not git user",
-                        "success": false
-                    }
+                    throw new Error("not git user")
                 }
             }
             else {
-                return {
-                    "message": "Un Auth",
-                    "success": false
-                }
+                throw new Error("Un Auth")
             }
         }
         else {
-            return {
-                "message": "token not provided",
-                "success": false
-            }
+            throw new Error("token not provided")
         }
     }
     catch (err) {
         console.log(err)
-        return {
-            "message": "error ocurred , something went wrong",
-            "success": false
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
         }
     }
 }
@@ -371,6 +401,10 @@ exports.unWatchRepository = async (root, args, context) => {
   */
 
 exports.AllUserCommits = async (root, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         if (context.token) {
             var payload = jwt.verify(context.token, process.env.APP_SECRET)
@@ -388,18 +422,21 @@ exports.AllUserCommits = async (root, args, context) => {
             return res.data.search
         }
         else {
-            return {
-                "message": "token not provided",
-                "success": false
-            }
+            throw new Error("token not provided")
         }
     }
 
     catch (err) {
         console.log(err)
-        return {
-            "message": "error",
-            "success": false
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
         }
     }
 }
@@ -415,6 +452,10 @@ exports.AllUserCommits = async (root, args, context) => {
   */
 
 exports.createIssue = async (parent, args, context) => {
+    let result = {
+        "message": "Something bad happened",
+        "success": false
+    }
     try {
         if (context.token) {
             var payload = jwt.verify(context.token, process.env.APP_SECRET)
@@ -445,20 +486,25 @@ exports.createIssue = async (parent, args, context) => {
                 return { message: "issue created successfully" }
             }
             else {
-                return { message: "error while creating issue" }
+                throw new Error("error while creating issue")
             }
         }
         else {
-            return {
-                message: "token not provided"
-            }
+            throw new Error("token not provided")
         }
 
     }
     catch (err) {
         console.log(err);
-        return {
-            "message": "something went wrong while creating issue"
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
         }
     }
 }

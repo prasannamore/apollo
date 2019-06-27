@@ -1,0 +1,1 @@
+{"uuid":"812f8e0b-b12b-4c2f-a307-9aff285902bd","parent":null,"pid":16628,"argv":["/usr/bin/node","/usr/bin/npm","test"],"execArgv":[],"cwd":"/home/admin1/apollo graphql","time":1561555192429,"ppid":16620,"root":"f356f913-4f8a-4f78-9f31-48b4908ef120","coverageFilename":"/home/admin1/apollo graphql/.nyc_output/812f8e0b-b12b-4c2f-a307-9aff285902bd.json","files":[]}

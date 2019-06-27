@@ -40,10 +40,10 @@ exports.forgotpassword = async (parent, args, context) => {
             // Send url with token for reseting password
             var token = jwt.sign({ email: args.email }, process.env.APP_SECRET)
             var url = ` click on url to reset password \n\n ${context.origin}/graphql?token=` + token;
-            console.log("sdfsdfsf", url)
             // send mail for reset password
             sendMail(url, args.email)
             // return mail send messege
+            logger.info("forgot password success")
             return {
                 "message": "mail send to email",
                 "success": true
@@ -92,6 +92,7 @@ exports.verifyEmail = async (parent, args, context) => {
         var updateuser = await userModel.updateOne({ "email": payload.email }, { $set: { verified: true } })
         if (updateuser) {
             // return success message
+            logger.info("email verification success")
             return {
                 "message": "email verification sucessful",
                 "success": true
@@ -107,6 +108,7 @@ exports.verifyEmail = async (parent, args, context) => {
         }
 
     } catch (err) {
+        logger.error(err)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -157,11 +159,13 @@ exports.resetpassword = async (parent, args, context) => {
         var newpassword = bcrypt.hashSync(args.password, 10)
         // update password
         var updateuser = await userModel.updateOne({ "email": payload.email }, { $set: { password: newpassword } })
-        if (updateuser)
+        if (updateuser){
+            logger.info("password reset success")
             return {
                 "message": "update sucessful",
                 "success": true
             }
+        }
         else {
             // return {
             //     "message": "update unsucessful",
@@ -171,6 +175,7 @@ exports.resetpassword = async (parent, args, context) => {
         }
 
     } catch (err) {
+        logger.error(err)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -202,26 +207,17 @@ exports.registration = async (parent, args, context) => {
         // email validation
         var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         if (!emailformat.test(args.email)) {
-            return {
-                "message": "not valid email",
-                "success": false
-            }
+            throw new Error("not valid email")
         }
         // password validation
         if (args.password.length < 8) {
-            return {
-                "message": "password must have atleast 8 char",
-                "success": false
-            }
+            throw new Error("password must have atleast 8 char")
         }
         // check if user exists
         var user = await userModel.find({ "email": args.email })
 
         if (user.length > 0) {
-            return {
-                "message": "email already exists",
-                "success": false
-            }
+            throw new Error("email already exists")
         }
         // encrypt password
         var hash = await bcrypt.hash(args.password, 10)
@@ -242,6 +238,7 @@ exports.registration = async (parent, args, context) => {
         if (saveuser) {
             // send mail for email verification
             sendMail(url, args.email);
+            logger.info("registration success")
             return {
                 "message": "Check yours mail for email verification",
                 "success": true
@@ -255,6 +252,7 @@ exports.registration = async (parent, args, context) => {
         }
     }
     catch (err) {
+        logger.error(err)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -285,7 +283,6 @@ exports.login = async (parent, args, context,info) => {
         // Email validation
         var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         if (!emailformat.test(args.email)) {
-            logger.error("Incorrect email address")
             throw new Error("Incorrect email address")
         }
         // password verification
@@ -294,7 +291,6 @@ exports.login = async (parent, args, context,info) => {
             //     "message": "password must have atleast 8 char",
             //     "success": false
             // }
-            logger.error("password must have atleast 8 char")
             throw new Error("password must have atleast 8 char")
         }
         // check if user exists
@@ -305,7 +301,6 @@ exports.login = async (parent, args, context,info) => {
                 //     "message": "email not varified",
                 //     "success": false
                 // }
-                logger.error("Email not varified")
                 throw new Error("Email not varified")
             }
             // compare password
@@ -326,16 +321,10 @@ exports.login = async (parent, args, context,info) => {
                 }
             }
             else {
-                // return {
-                //     "message": "password not match",
-                //     "success": false
-                // }
-                logger.error("in correct password")
                 throw new Error("in correct password")
             }
         }
         else {
-            logger.error("Not registered")
             throw new Error("Not registered")
         }
 
