@@ -17,6 +17,7 @@ const userModel = require("../../model/userModel")
 const axios = require("axios")
 const sendMail = require("../../services/nodemailer").sendEmailFunction;
 const axiosService = require("../../services/axiosService").axiosService;
+const logger = require("../../services/logger").logger;
 
 
 
@@ -80,7 +81,7 @@ exports.oAuth = async (root, args, context) => {
         }
     }
     catch (err) {
-        console.log(err)
+        logger.error(err.message)
         return {
             "message": err.message,
             "success": false
@@ -139,7 +140,7 @@ exports.verify = async (root, args, context) => {
         }
     }
     catch (err) {
-        console.log(err)
+        logger.error(err.message)
         return {
             "message": err,
             "success": false

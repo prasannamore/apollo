@@ -35,7 +35,6 @@ exports.forgotpassword = async (parent, args, context) => {
     try {
         // check if user is registerd
         var user = await userModel.find({ 'email': args.email });
-        console.log(user)
         if (user.length > 0) {
             // Send url with token for reseting password
             var token = jwt.sign({ email: args.email }, process.env.APP_SECRET)
@@ -57,7 +56,7 @@ exports.forgotpassword = async (parent, args, context) => {
             throw new Error("Invalid user")
         }
     } catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -108,7 +107,7 @@ exports.verifyEmail = async (parent, args, context) => {
         }
 
     } catch (err) {
-        logger.error(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -159,7 +158,7 @@ exports.resetpassword = async (parent, args, context) => {
         var newpassword = bcrypt.hashSync(args.password, 10)
         // update password
         var updateuser = await userModel.updateOne({ "email": payload.email }, { $set: { password: newpassword } })
-        if (updateuser){
+        if (updateuser) {
             logger.info("password reset success")
             return {
                 "message": "update sucessful",
@@ -175,7 +174,7 @@ exports.resetpassword = async (parent, args, context) => {
         }
 
     } catch (err) {
-        logger.error(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -252,7 +251,7 @@ exports.registration = async (parent, args, context) => {
         }
     }
     catch (err) {
-        logger.error(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -274,7 +273,7 @@ exports.registration = async (parent, args, context) => {
   * @param {*} args    : arguments for resolver funtions
   * @param {*} context    : context 
    */
-exports.login = async (parent, args, context,info) => {
+exports.login = async (parent, args, context, info) => {
     let result = {
         "message": "Something bad happened",
         "success": false
@@ -329,7 +328,7 @@ exports.login = async (parent, args, context,info) => {
         }
 
     } catch (err) {
-        logger.error(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError

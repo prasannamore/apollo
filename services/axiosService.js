@@ -21,7 +21,6 @@ exports.axiosService = (method, url, access_token, data) => {
                 resolve(res)
             })
             .catch(function (err) {
-                console.log("Error in axios service=>", err)
                 reject(err)
             })
     })

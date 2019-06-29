@@ -15,6 +15,7 @@
     
     // require node module
     const nodemailer = require('nodemailer');
+    const logger = require("./logger").logger;
     // create mail transpoter
     exports.sendEmailFunction = (url, email) => {
         try {
@@ -36,15 +37,25 @@
         // send mail
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
-                console.log("Invalid username or password");
-                console.log("ERROR: while sending the mail", err)
+                throw new Error(err);
+                
+                // console.log("Invalid username or password");
+                // console.log("ERROR: while sending the mail", err)
             }
-            else
-                console.log('Information regarding the mail sent', info);
         });
     }
     catch (err) {
-        console.log("err in node mailer")
+        logger.error(err)
+        if (err instanceof ReferenceError
+            || err instanceof SyntaxError
+            || err instanceof TypeError
+            || err instanceof RangeError) {
+            return result;
+        }
+        else {
+            result.message = err.message;
+            return result
+        }
     }
 }
 

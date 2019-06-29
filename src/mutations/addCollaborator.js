@@ -21,6 +21,7 @@ const colModel = require('../../model/collaborate')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendMail = require('../../services/nodemailer').sendEmailFunction
+const logger = require("../../services/logger").logger;
 
 /**
   * @description       : add collaborator
@@ -76,6 +77,7 @@ exports.addCollaborator = async (parent, args, context) => {
         }
         throw new Error("token not provided")
     } catch (err) {
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -136,6 +138,7 @@ exports.removeCollaborator = async (parent, args, context) => {
         }
         throw new Error("token not provided")
     } catch (err) {
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError

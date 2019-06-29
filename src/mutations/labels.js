@@ -17,6 +17,7 @@
 const jwt = require("jsonwebtoken");
 const labelModel = require("../../model/labelModel");
 const authentication = require("../../services/authenticationService").authentication;
+const logger = require("../../services/logger").logger;
 
 /**
    * @description       :  add labels
@@ -72,6 +73,7 @@ exports.addLabel = async (root, args, context, info) => {
     }
     // catch if error occures
     catch (err) {
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -199,6 +201,7 @@ exports.removeLabel = async (root, args, context) => {
             throw new Error("token not provideds")
         }
     } catch (err) {
+        logger.error(err.message)
         // return error
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
@@ -272,6 +275,7 @@ exports.updateLabel = async (root, args, context) => {
         }
     }
     catch (err) {
+        logger.error(err.message)
         // return error
         if (err instanceof ReferenceError
             || err instanceof SyntaxError

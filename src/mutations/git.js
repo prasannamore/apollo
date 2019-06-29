@@ -20,6 +20,7 @@ const userModel = require("../../model/userModel");
 const issueModel = require("../../model/issuseModel")
 const { createApolloFetch } = require('apollo-fetch');
 const axios = require("axios");
+const logger = require("../../services/logger").logger;
 const axiosService = require("../../services/axiosService").axiosService
 /**
   * @description       : create branch on repositories
@@ -55,7 +56,6 @@ exports.createBranch = async (root, args, context) => {
                 console.log("sha response==================>", shaRes.data[0].object.sha)   
                 let branchurl = `https://api.github.com/repos/${args.gitUserName}/${args.repoName}/git/refs`
                 const  data = {
-
                     "ref": `refs/heads/${args.branchName}`,
                     "sha": shaRes.data[0].object.sha
                 }
@@ -80,7 +80,7 @@ exports.createBranch = async (root, args, context) => {
 
     }
     catch (err) {
-        console.log("Error====================>\n", err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -141,7 +141,7 @@ exports.deleteBranch = async (root, args, context) => {
         }
     }
     catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -206,6 +206,7 @@ exports.star = async (root, args, context) => {
     }
 }
 catch(err){
+    logger.error(err.message)
     if (err instanceof ReferenceError
         || err instanceof SyntaxError
         || err instanceof TypeError
@@ -269,6 +270,7 @@ exports.unstar = async (root, args, context) => {
     }
 }
 catch(err){
+    logger.error(err.message)
     if (err instanceof ReferenceError
         || err instanceof SyntaxError
         || err instanceof TypeError
@@ -322,7 +324,7 @@ exports.watchrepository = async (root, args, context) => {
         }
     }
     catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -377,7 +379,7 @@ exports.unWatchRepository = async (root, args, context) => {
         }
     }
     catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -427,7 +429,7 @@ exports.AllUserCommits = async (root, args, context) => {
     }
 
     catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -495,7 +497,7 @@ exports.createIssue = async (parent, args, context) => {
 
     }
     catch (err) {
-        console.log(err);
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError

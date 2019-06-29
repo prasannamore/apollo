@@ -19,6 +19,7 @@ const jwt = require("jsonwebtoken");
 const notesModel = require("../../model/notesModel");
 const userModel = require("../../model/userModel")
 const { createApolloFetch } = require('apollo-fetch');
+const logger = require("../../services/logger").logger;
 
 /**
    * @description       : add notes
@@ -77,6 +78,7 @@ exports.addNotes = async (root, args, context) => {
         }
     }
     catch (err) {
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -139,6 +141,7 @@ exports.removeNote = async (root, args, context) => {
             }
         }
     } catch (err) {
+        logger.error(err.message)
         // return error
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
@@ -207,6 +210,7 @@ exports.editNote = async (root, args, context) => {
         }
     }
     catch (err) {
+        logger.error(err.message)
         // return error
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
@@ -276,6 +280,7 @@ exports.addLabelToNote = async (root, args, context) => {
 
     }
     catch (err) {
+        logger.error(err.message)
         // return error
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
@@ -349,6 +354,7 @@ exports.removeLabelfromNote = async (root, args, context) => {
         }
     }
     catch (err) {
+        logger.error(err.message)
         // return error
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
@@ -424,6 +430,7 @@ exports.archive = async (root, args, context) => {
     }
 }
 catch(err){
+    logger.error(err.message)
     if (err instanceof ReferenceError
         || err instanceof SyntaxError
         || err instanceof TypeError
@@ -498,6 +505,7 @@ exports.trash = async (root, args, context) => {
     }
 }
 catch(err){
+    logger.error(err.message)
     if (err instanceof ReferenceError
         || err instanceof SyntaxError
         || err instanceof TypeError
@@ -573,6 +581,7 @@ exports.untrash = async (root, args, context) => {
     }
 }
 catch(err){
+    logger.error(err.message)
     if (err instanceof ReferenceError
         || err instanceof SyntaxError
         || err instanceof TypeError
@@ -644,7 +653,7 @@ exports.unarchive = async (root, args, context) => {
             }
         }
     } catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -745,6 +754,7 @@ exports.pullGitRepo = async (root, args, context) => {
     }
 }
     catch(err){
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError
@@ -812,7 +822,7 @@ exports.addReminder = async (root, args, context) => {
             throw new Error("token not provided")
         }
     } catch (err) {
-        console.log(err)
+        logger.error(err.message)
         if (err instanceof ReferenceError
             || err instanceof SyntaxError
             || err instanceof TypeError

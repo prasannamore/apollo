@@ -15,7 +15,7 @@
     "negativeunTrashNote":"mutation{  untrash(NoteID:\"5cecb8ab7d69e11ceb0ecc06\"){     message     success   }  }",
     "negativearchiveNote":"mutation{  archive(NoteID:\"5cecb8ab7d69e11ceb0ecc06\"){     message     success   }  }",
     "negativeunarchiveNote":"mutation{  unarchive(NoteID:\"5cecb8ab7d69e11ceb0ecc06\"){     message     success   }  }",
-    "negativereminder":"mutation{  addReminder(NoteID:\"5cecb8ab7d69e11ceb0ecc06\" date:\"05/25/2019 01:03:00\"){     message     success   }  }",
+    "negativereminder":"mutation{  addReminder(NoteID:\"5cecb8ab7d69e11ceb0ecc06\" date:\"05/2/20l19 01:03:00\"){     message     success   }  }",
     "negativewatchRepository":"mutation{   watchrepository(watchrepository:\"notExists\",owner:\"prasannamore\"){      success  }   }",
     "negativeUnwatchRepository":"mutation{   unwatchrepository(unwatchrepository:\"notExists\",owner:\"prasannamore\"){    success   }   }",
     "negativestar":"mutation{  star{   success}}",

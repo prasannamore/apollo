@@ -1,6 +1,16 @@
 
 {"message":"Incorrect email address","level":"error"}
-{"level":"error"}
-{"level":"error"}
-{"level":"error"}
-{"level":"error"}
+{"message":"email already exists","level":"error"}
+{"message":"password must have atleast 8 char","level":"error"}
+{"message":"Email not varified","level":"error"}
+{"message":"Invalid user","level":"error"}
+{"message":"label name should be have length of atleast 3","level":"error"}
+{"message":"label already exits","level":"error"}
+{"message":"label connot update","level":"error"}
+{"message":"Unable to remove label","level":"error"}
+{"message":"label already exits","level":"error"}
+{"message":"label connot update","level":"error"}
+{"message":"Unable to remove label","level":"error"}
+{"message":"Request failed with status code 404","level":"error"}
+{"message":"Request failed with status code 404","level":"error"}
+{"message":"Cast to date failed for value \"Invalid Date\" at path \"remainder\"","level":"error"}

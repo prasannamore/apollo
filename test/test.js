@@ -540,7 +540,7 @@ describe('nagative Reminder date not valid', () => {
         test("http://localhost:4000")
             .post('/graphql')
             .query({ "token": token })
-            .send({ query: test1().reminder })
+            .send({ query: negativetest().negativereminder })
             .expect(200)
             .end((err, res) => {
                 console.log(token)
